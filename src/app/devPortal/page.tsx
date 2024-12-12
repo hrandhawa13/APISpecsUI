@@ -23,8 +23,6 @@ export default function DevPortal() {
         data = await response.json();
         console.log(data);
         setApiSpecs(data);
-        setSelectedSpec(data[1]?.specName);
-        parseYamlToJson(data[1]?.content);
       } catch (err: any) {
         setError(err.message);
       } finally {
@@ -87,28 +85,10 @@ export default function DevPortal() {
       {/* Render Swagger UI only after it's selected and parsed */}
       {selectedSpec && swaggerData && (
         <div>
-          <h3>{selectedSpec}</h3>
-          <SwaggerUIWrapper spec={swaggerData} />
+          <h3>{selectedSpec.split("/").pop()}</h3>
+          <SwaggerUI spec={swaggerData} />
         </div>
       )}
     </div>
   );
 }
-
-const SwaggerUIWrapper = ({ spec }: { spec: any }) => {
-  const [mounted, setMounted] = useState(false);
-
-  useEffect(() => {
-    setMounted(true);
-  }, []);
-
-  if (!mounted) {
-    return null; // Prevent rendering Swagger UI before the component is mounted
-  }
-
-  return (
-    <div>
-      <SwaggerUI spec={spec} url={undefined} />
-    </div>
-  );
-};
